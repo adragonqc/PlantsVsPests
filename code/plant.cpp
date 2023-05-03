@@ -25,8 +25,16 @@ Plant::Plant(float x,float y, int healthPoints, sf::Texture texture) {
     growTime = sf::seconds(120.f); // 1.5 minutes
     secsPassed = sf::seconds(60);
     number =0;
+    maxHP=healthPoints;
     hP = healthPoints;
     amountOfWaterings=0;
+
+
+    // Initialize healthBar
+    healthBar.setFillColor(sf::Color::Green);
+    healthBar.setSize(sf::Vector2f(sprite.getGlobalBounds().width, 5));
+    healthBar.setOrigin(sf::Vector2f(sprite.getGlobalBounds().width / 2.f, 10));
+    healthBar.setPosition(sprite.getPosition().x, sprite.getPosition().y - 20.f);
 
 }
 
@@ -35,6 +43,10 @@ void Plant::draw(sf::RenderWindow& window) {
 }
 
 void Plant::update(sf::Time dt) {
+    // Update healthBar
+    float hpRatio = (float)hP / maxHP;
+    healthBar.setSize(sf::Vector2f(sprite.getGlobalBounds().width * hpRatio, 5));
+    healthBar.setPosition(sprite.getPosition().x, sprite.getPosition().y - 20.f);
     if (isGrowing) {
         growTimer += dt;
         number++;
@@ -79,6 +91,8 @@ void Plant::increaseHP(int incriment){
 
 void Plant::decreaseHP(int incriment){
     hP-=incriment;
+    std::cout << "The plant has been attacked!" << std::endl;
+
 }
 
 int Plant::getHP(){

@@ -9,10 +9,14 @@
 
 class Pest {
     public:
-        Pest();
-        void move(Time::time dt);
+        Pest(float x, float y,int hP_);
+        void update(sf::Time dt, std::vector<Plant> plants);
         void draw(sf::RenderWindow& window);
-        void collisionWithPlant(Plant* plant);
+        const sf::FloatRect getGB();
+        void attackSpell(std::vector<Plant>& plants);
+        void decreaseHP(int amount);
+        int getHP();
+        // void collisionWithPlant(Plant* plant);
         
 
     private:
@@ -22,7 +26,8 @@ class Pest {
         sf::Vector2f velocity;
         bool isOnScreen;
         int attackDamage;
+        int hP;
 
 
-}
+};
 #endif

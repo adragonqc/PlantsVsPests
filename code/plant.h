@@ -19,6 +19,7 @@ class Plant {
         void decreaseHP(int incriment);
         int getHP();
         sf::Sprite sprite;
+        sf::RectangleShape healthBar;
 
     private:
         // sf::Texture texture;
@@ -29,6 +30,7 @@ class Plant {
         sf::Time secsPassed;
         int number;
         int hP;
+        int maxHP;
         int amountOfWaterings;
 };
 

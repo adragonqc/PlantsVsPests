@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include "plant.h"
+#include "pest.h"
 
 class Farmer {
 public:
@@ -14,8 +15,9 @@ public:
     void setTextureRect(sf::IntRect rect);
     void move(sf::Vector2f offset);
     void update(sf::Time dt, sf::RenderWindow& window);
-    void handleEvent(sf::Event event, std::vector<Plant>& plants);
+    void handleEvent(sf::Event event, std::vector<Plant>& plants, std::vector<Pest>& pests);
     void waterSpell(Plant& plant);
+    void attackSpell(std::vector<Pest>& pests);
 
 private:
     sf::Texture spriteTexture;

@@ -1,5 +1,6 @@
 #include "farmer.h"
 #include "plant.h"
+#include "pest.h"
 #include <iostream>
 #include <SFML/Graphics/Rect.hpp>
 using namespace std;
@@ -62,7 +63,7 @@ void Farmer::update(sf::Time dt, sf::RenderWindow& window) {
 }
 
 
-void Farmer::handleEvent(sf::Event event, std::vector<Plant>& plants) {
+void Farmer::handleEvent(sf::Event event, std::vector<Plant>& plants, std::vector<Pest>& pests) {
     if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
             case sf::Keyboard::W:
@@ -86,6 +87,16 @@ void Farmer::handleEvent(sf::Event event, std::vector<Plant>& plants) {
                 for (Plant& plant : plants) {
                     if (sprite.getGlobalBounds().intersects(plant.getGB())) {
                         waterSpell(plant);
+                        break;
+                    }
+                }
+                break;
+            case sf::Keyboard::X:
+                // Check if the farmer is on top of a plant and use waterSpell on that plant
+                for (Pest& pest : pests) {
+                    
+                    if (sprite.getGlobalBounds().intersects(pest.getGB())) {
+                        attackSpell(pests);
                         break;
                     }
                 }
@@ -128,6 +139,23 @@ void Farmer::waterSpell(Plant& plant) {
         // Call the startGrowing() function on the plant
         plant.increaseHP(3);
         // Print a message to the console
+    }
+}
+
+void Farmer::attackSpell(std::vector<Pest>& pests) {
+    for (int i = 0; i < pests.size(); i++) {
+        if (sprite.getGlobalBounds().intersects(pests[i].getGB())) {
+            // Decrease the health of the plant by 10
+            pests[i].decreaseHP(10);
+
+            // If the health of the plant reaches 0 or below, remove it from the vector
+            if (pests[i].getHP() <= 0) {
+                pests.erase(pests.begin() + i);
+            }
+
+            // Only attack one pest at a time
+            break;
+        }
     }
 }
 
