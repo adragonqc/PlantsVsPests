@@ -2,8 +2,7 @@
 
 #include <SFML/Graphics/Rect.hpp>
 
-Pest::Pest(float x, float y, int hP_) {
-    texture.loadFromFile("graphics/squirrel.png");
+Pest::Pest(float x, float y, int hP_,texture) {
     sprite.setTexture(texture);
     sprite.setTextureRect(sf::IntRect(8, 197, 15, 24));
     // sprite.setScale(sf::Vector2f(0.75f, 0.75f));

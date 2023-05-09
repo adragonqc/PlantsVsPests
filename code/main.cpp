@@ -51,7 +51,7 @@ int main() {
 
     std::vector<Pest> pests;
     for (int i = 0; i < 5; i++) {
-        Pest pest((i+2)*64, 0*64, 20); 
+        Pest pest((i+2)*64, 0*64, 20, texture); 
         pests.push_back(pest); // add the new plant to the vector
     }
 
