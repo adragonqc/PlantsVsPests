@@ -6,13 +6,13 @@
 using namespace std;
 
 Farmer::Farmer() {
-
+    //load farmer poses
     if (!spriteTexture.loadFromFile("graphics/farmerPoses.png")) {
         // handle error
     }
 
-    sprite.setTexture(spriteTexture);
-    sprite.setTextureRect(sf::IntRect(0, 40, 56, 108));
+    sprite.setTexture(spriteTexture);//set texture
+    sprite.setTextureRect(sf::IntRect(0, 40, 56, 108));//set texture size
     sprite.setScale(sf::Vector2f(0.75f, 0.75f));
 
     speed = 100.f;
@@ -92,6 +92,7 @@ void Farmer::handleEvent(sf::Event event, std::vector<Plant>& plants, std::vecto
                 }
                 break;
             case sf::Keyboard::X:
+                sprite.setTextureRect(sf::IntRect(824, 40, 108, 137));
                 // Check if the farmer is on top of a plant and use waterSpell on that plant
                 for (Pest& pest : pests) {
                     
@@ -122,6 +123,12 @@ void Farmer::handleEvent(sf::Event event, std::vector<Plant>& plants, std::vecto
             case sf::Keyboard::D:
             case sf::Keyboard::Right:
                 velocity.x = 0.f;
+                break;
+            case sf::Keyboard::E:
+                sprite.setTextureRect(sf::IntRect(0, 40, 56, 108));
+                break;
+            case sf::Keyboard::X:
+                sprite.setTextureRect(sf::IntRect(0, 40, 56, 108));
                 break;
             default:
                 break;
