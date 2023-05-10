@@ -1,4 +1,5 @@
 #include "pest.h"
+#include "plant.h"
 
 #include <SFML/Graphics/Rect.hpp>
 

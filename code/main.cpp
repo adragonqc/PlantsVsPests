@@ -97,6 +97,11 @@ int main() {
             farmer.handleEvent(event, plants, pests);
         }
         farmer.update(dt,window);
+        for (auto& pest : pests) {
+            if (pest.getHP()<1){
+                pest.erase(pests.begin() + i);
+            }
+        }
         for(int i=0; i<10; i++){
             plants[i].update(dt);
         }

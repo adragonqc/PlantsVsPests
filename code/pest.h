@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 
-#pragma once
+// #pragma once
 #include "plant.h"
 
 class Pest {
