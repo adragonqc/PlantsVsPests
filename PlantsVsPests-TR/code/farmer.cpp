@@ -83,6 +83,7 @@ void Farmer::handleEvent(sf::Event event, std::vector<Plant>& plants, std::vecto
                 velocity.x = 1.f;
                 break;
             case sf::Keyboard::E:
+                sprite.setTextureRect(sf::IntRect(692, 40, 56, 120));
                 // Check if the farmer is on top of a plant and use waterSpell on that plant
                 for (Plant& plant : plants) {
                     if (sprite.getGlobalBounds().intersects(plant.getGB())) {
@@ -156,9 +157,9 @@ void Farmer::attackSpell(std::vector<Pest>& pests) {
             pests[i].decreaseHP(10);
 
             // If the health of the plant reaches 0 or below, remove it from the vector
-            if (pests[i].getHP() <= 0) {
-                pests.erase(pests.begin() + i);
-            }
+            // if (pests[i].getHP() <= 0) {
+            //     pests.erase(pests.begin() + i);
+            // }
 
             // Only attack one pest at a time
             break;

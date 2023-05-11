@@ -10,6 +10,8 @@
 #include "farmer.h"
 #include "plant.h"
 #include "pest.h"
+
+#include <random>
 /*
 recources:
 https://en.sfml-dev.org/forums/index.php?topic=20625.0
@@ -20,7 +22,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(64*9, 64*9), "Farmland");
     window.setFramerateLimit(10);
 
-    //music added:  Reflected Light by SergePavkinMusic 
+    // music added:  Reflected Light by SergePavkinMusic 
     sf::Music music;
     if (!music.openFromFile("reflected-light.wav"))
     {
@@ -54,11 +56,11 @@ int main() {
     }
 
     std::vector<Pest> pests;
-    for (int i = 0; i < 5; i++) {
+    // for (int i = 0; i < 5; i++) {
 
-        Pest pest(((i+2)*64), 0*64, 20, texture); 
-        pests.push_back(pest); // add the new plant to the vector
-    }
+    //     Pest pest(((i+2)*64), 0*64, 20, texture); 
+    //     pests.push_back(pest); // add the new plant to the vector
+    // }
 
     window.clear();
     sf::Texture titleTexture;
@@ -90,6 +92,12 @@ int main() {
     exit_loop1:
 
 
+
+    // Timer for spawning new pests
+    sf::Clock pestSpawnTimer;
+    float pestSpawnInterval = 2.f; // Spawn a new pest every 5 seconds
+    float increaseSpeedTimer = 1;
+
     while (window.isOpen()) {
         sf::Time dt = clock.restart();
         
@@ -102,32 +110,60 @@ int main() {
             farmer.handleEvent(event, plants, pests);
         }
         farmer.update(dt,window);
+    
+    
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(2, 5);
+        //randomly generate squirrels
+        int random_number = dis(gen);
+
+        if (pestSpawnTimer.getElapsedTime().asSeconds() > pestSpawnInterval && pests.size() < 10) {
+            pests.emplace_back(random_number*64, 0, 10, texture); // Add a new pest to the vector //put random number between 2 and 5 *64 here
+            pestSpawnTimer.restart(); // Restart the timer
+        }
         
 
 /**** TR CHANGES = int i+1 & i++****/
-        int i=1;
-      for (auto& pest : pests) {
+    //   for (auto& pest : pests) {
+        for(int i=0;i<pests.size();i++){
         std::cout<<"Priting pests"<<std::endl;
         //for (size_t i = 0; i < pests.size(); i++) {
         //Pest& pest = pests[i]; // get a reference to the i-th element in the vector
        // pest.updatePosition(); // call a member function to update the position
-
-            if (pest.getHP()<1){
-                pests.erase(pests.begin() + i);
-            }i++;
+            std::cout<<"hp of pests== " <<pests[i].getHP()<<std::endl;
+            if (pests[i].getHP()<1){
+                pests.erase(pests.begin()+i);
+            }
         }
+
 /**** TR CHANGES****/
 
 /**** TR CHANGES i stops at 5 instead of 10 ****/
-        for(int i=0; i<5; i++){
+        for(int i=0; i<plants.size(); i++){
             plants[i].update(dt);
-        std::cout<<"Priting pests12"<<std::endl;
+        // std::cout<<"Priting pests12"<<std::endl;
         }
         
-        for(int i=0; i<5; i++){
-
-            pests[i].update(dt,plants);
+        increaseSpeedTimer++;
+        for(int i=0; i<pests.size(); i++){
+            bool status = pests[i].update(dt, plants, increaseSpeedTimer);
+            if(status){
+                pests.erase(pests.begin()+i);
+            }
             std::cout<<"Priting 1231"<<std::endl;
+        }
+
+        for(int i=0;i<plants.size();i++){
+        std::cout<<"Priting plants"<<std::endl;
+        //for (size_t i = 0; i < pests.size(); i++) {
+        //Pest& pest = pests[i]; // get a reference to the i-th element in the vector
+       // pest.updatePosition(); // call a member function to update the position
+            std::cout<<"hp of plants== " <<plants[i].getHP()<<std::endl;
+            if (plants[i].getHP()<1){
+                plants.erase(plants.begin()+i);
+            }
         }
 /**** TR CHANGES i stops at 5 instead of 10 ****/
 
@@ -142,16 +178,17 @@ int main() {
 
 /**** TR CHANGES i stops at 5 instead of 10 ****/
 
-        for(int i=0; i<5; i++){
-            std::cout<<"Priting pplantqwew"<<std::endl;
+        for(int i=0; i<plants.size(); i++){
+            // std::cout<<"Priting pplantqwew"<<std::endl;
             plants[i].draw(window);
         }
-        for(int i=0; i<5; i++){
+        for(int i=0; i<pests.size(); i++){
             pests[i].draw(window);
         }
         //plant.draw(window);
         
         window.display();
+        
     }
 
     //stop music when window closed

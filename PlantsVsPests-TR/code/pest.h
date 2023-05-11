@@ -12,7 +12,7 @@
 class Pest {
     public:
         Pest(float x, float y, int hP_,sf::Texture& texture); //changed
-        void update(sf::Time dt, std::vector<Plant> plants);
+        bool update(sf::Time dt, std::vector<Plant>& plants, float increaseSpeedTimer);
         void draw(sf::RenderWindow& window);
         const sf::FloatRect getGB();
         void attackSpell(std::vector<Plant>& plants);
@@ -29,6 +29,7 @@ class Pest {
         bool isOnScreen;
         int attackDamage;
         int hP;
+        float nummy;
 
 
 };

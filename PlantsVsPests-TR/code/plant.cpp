@@ -9,13 +9,15 @@ using namespace std;
 //Plant::Plant(float x,float y, int healthPoints, sf::Texture texture) is AR implementation 
 
 Plant::Plant(float x,float y, int healthPoints, sf::Texture& texture) {
-   // sf::Texture texture;
-    if (!texture.loadFromFile("graphics/plant.png")) {
-    //     // handle error
-     }
+// Plant::Plant(float x,float y, int healthPoints) {
+    // sf::Texture texture;
+    // if (!texture.loadFromFile("graphics/plant.png")) {
+    // //     // handle error
+    //  }
     sprite.setTexture(texture);
     
-    sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
+    sprite.setTextureRect(sf::IntRect(439, 26, 137, 247));
+    sprite.setScale(sf::Vector2f(0.15f, 0.15f));
     sprite.setPosition(x, y);
     // // Get the width and height of the sprite
     // float width = sprite.getLocalBounds().width;
@@ -49,16 +51,21 @@ void Plant::draw(sf::RenderWindow& window) {
 void Plant::update(sf::Time dt) {
     // Update healthBar
     float hpRatio = (float)hP / maxHP;
+
+
     healthBar.setSize(sf::Vector2f(sprite.getGlobalBounds().width * hpRatio, 5));
     healthBar.setPosition(sprite.getPosition().x, sprite.getPosition().y - 20.f);
     if (isGrowing) {
         growTimer += dt;
         //std::cout<<growTimer<<std::endl;
-        number=number +1;
+        number=number +1;//time
        std::cout<<number<<std::endl;
 
         if(number >= 500 && amountOfWaterings > 2){//grow double size
-            sprite.setScale(sf::Vector2f(2.f, 2.f));
+            sprite.setScale(sf::Vector2f(0.25f, 0.25f));
+        }else{
+            sprite.setTextureRect(sf::IntRect(439, 26, 137, 247));
+            sprite.setScale(sf::Vector2f(0.15f, 0.15f));
         }
 
         if (number >= 1000 && hP >= 15) {//after 100 seconds the plant will sprout
