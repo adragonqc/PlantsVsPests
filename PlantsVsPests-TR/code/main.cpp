@@ -91,12 +91,30 @@ int main() {
     }
     exit_loop1:
 
+    sf::Text text;
+    sf::Font font;
+    if (!font.loadFromFile("Minecraft.ttf")){//find a font
+        std::cerr<<"failed to load font"<<std::endl;
+    }
+
+    text.setFont(font);
 
 
     // Timer for spawning new pests
     sf::Clock pestSpawnTimer;
     float pestSpawnInterval = 2.f; // Spawn a new pest every 5 seconds
     float increaseSpeedTimer = 1;
+    int squirrelKillCount =0;
+
+    text.setString("SCRORE : " +std::to_string(squirrelKillCount));
+    // set the character size
+    text.setCharacterSize(16); // in pixels, not points!
+
+    // set the color
+    text.setFillColor(sf::Color::Magenta);
+
+    // set the text style
+    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
     while (window.isOpen()) {
         sf::Time dt = clock.restart();
@@ -135,6 +153,8 @@ int main() {
             std::cout<<"hp of pests== " <<pests[i].getHP()<<std::endl;
             if (pests[i].getHP()<1){
                 pests.erase(pests.begin()+i);
+                squirrelKillCount++;
+                text.setString("SCRORE : " +std::to_string(squirrelKillCount));
             }
         }
 
@@ -186,6 +206,7 @@ int main() {
             pests[i].draw(window);
         }
         //plant.draw(window);
+        window.draw(text);
         
         window.display();
         
