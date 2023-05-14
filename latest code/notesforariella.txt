@@ -1,0 +1,35 @@
+NOTES FOR ARIELLA 
+
+1. I could not use your makefile so I compiled 
+
+g++ -std=c++11 main.cpp map.cpp farmer.cpp pest.cpp plant.cpp  -I /opt/homebrew/Cellar/sfml/2.5.1_2/include/ -o prog -L/opt/homebrew/Cellar/sfml/2.5.1_2/lib/ -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+
+My executable is called prog so I run this program ./prog
+
+2. I didnot use strawberry .cpp or .h
+
+
+3a. Main change for the segmentation fault was the Line 108 onwards main.cpp. First the i was not declared for the pest objects 
+
+3b.  for(int i=0; i<5; i++){
+            plants[i].update(dt); 
+
+     some reason was not letting this loop go beyond 5. I checked your plant.h and the best fix was to limit the plants to 5 instead of 10. You can modify this. 
+
+
+4. Pest.cpp and Pest.h
+the pest constructor did not have the same number of parameters so I fixed that to fix the error. 
+
+5. Plant.cpp and Plant.h : how did I get the plant.png to show up 
+ Plant(float x, float y, int healthPoints, sf::Texture& texture); 
+
+ You used sf::Texture. Explanation is below 
+
+ sf::Texture& texture is a reference to a sf::Texture object, meaning that any changes made to texture will affect the original sf::Texture object passed in.
+
+On the other hand, sf::Texture texture is a copy of the sf::Texture object passed in, meaning that any changes made to texture will not affect the original sf::Texture object passed in.
+
+So if you want to modify the original texture, you should use sf::Texture& texture. If you don't need to modify it, you can use const sf::Texture& texture to indicate that you won't be modifying it, which can be helpful for preventing accidental modifications.
+
+
+Please be mindful of the code you are writing, it took me 2 hours to parse through it to understand what was happenning. You are implementing too many things in the same time. Not a good way of coding at all. 

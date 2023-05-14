@@ -91,6 +91,39 @@ int main() {
     }
     exit_loop1:
 
+    window.clear();
+    sf::Texture inTexture;
+    //display title
+    if (!inTexture.loadFromFile("graphics/instructionPage.jpg")) {
+        // handle error loading image
+    }
+    
+    sf::Sprite inSprite(inTexture);
+    inSprite.setPosition(0.f, 0.f);
+    inSprite.setScale(sf::Vector2f(0.4565f, 0.4565f));//has to be this number
+    // draw title screen
+    window.clear();
+    window.draw(inSprite);
+    window.display();
+
+    // texture.loadFromFile("graphics/plant.png");
+
+    clock.restart();
+    while (clock.getElapsedTime().asSeconds() < 10) {
+        sf::Event event;
+
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::KeyPressed) {
+                // exit loop on any key press
+                window.clear();
+               goto exit_loop2;
+            }
+        }
+    }
+    exit_loop2:
+
+
+    //load score stuffs
     sf::Text text;
     sf::Font font;
     if (!font.loadFromFile("Minecraft.ttf")){//find a font
@@ -218,4 +251,48 @@ int main() {
 
 
     return 0;
+}
+
+
+/**
+https://github.com/SFML/SFML/wiki/Source%3A-Letterbox-effect-using-a-view
+
+
+Compares the aspect ratio of the window to the aspect ratio of the view,
+and sets the view's viewport accordingly in order to archieve a letterbox effect.
+A new view (with a new viewport set) is returned.
+*/
+sf::View getLetterboxView(sf::View view, int windowWidth, int windowHeight) {
+
+    // Compares the aspect ratio of the window to the aspect ratio of the view,
+    // and sets the view's viewport accordingly in order to archieve a letterbox effect.
+    // A new view (with a new viewport set) is returned.
+
+    float windowRatio = windowWidth / (float) windowHeight;
+    float viewRatio = view.getSize().x / (float) view.getSize().y;
+    float sizeX = 1;
+    float sizeY = 1;
+    float posX = 0;
+    float posY = 0;
+
+    bool horizontalSpacing = true;
+    if (windowRatio < viewRatio)
+        horizontalSpacing = false;
+
+    // If horizontalSpacing is true, the black bars will appear on the left and right side.
+    // Otherwise, the black bars will appear on the top and bottom.
+
+    if (horizontalSpacing) {
+        sizeX = viewRatio / windowRatio;
+        posX = (1 - sizeX) / 2.f;
+    }
+
+    else {
+        sizeY = windowRatio / viewRatio;
+        posY = (1 - sizeY) / 2.f;
+    }
+
+    view.setViewport( sf::FloatRect(posX, posY, sizeX, sizeY) );
+
+    return view;
 }
