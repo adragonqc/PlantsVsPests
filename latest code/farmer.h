@@ -18,6 +18,7 @@ public:
     void handleEvent(sf::Event event, std::vector<Plant>& plants, std::vector<Pest>& pests);
     void waterSpell(Plant& plant);
     void attackSpell(std::vector<Pest>& pests);
+    const sf::FloatRect getGB();
 
 private:
     sf::Texture spriteTexture;

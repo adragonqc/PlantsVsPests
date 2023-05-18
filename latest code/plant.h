@@ -11,7 +11,7 @@ class Plant {
         void setPosition(float x, float y);
         // sf::Sprite getSprite() const;
         void draw(sf::RenderWindow& window);
-        void update(sf::Time dt);
+        bool update(sf::Time dt);
         void startGrowing();
         void stopGrowing();
         const sf::FloatRect getGB();//global bounds of sprite
@@ -20,6 +20,7 @@ class Plant {
         int getHP();
         sf::Sprite sprite;
         sf::RectangleShape healthBar;
+        bool getIsGrowing();
 
     private:
         // sf::Texture texture;

@@ -10,6 +10,7 @@
 #include "farmer.h"
 #include "plant.h"
 #include "pest.h"
+#include "strawberry.h"
 
 #include <random>
 /*
@@ -56,6 +57,7 @@ int main() {
     }
 
     std::vector<Pest> pests;
+    std::vector<Strawberry> strawberrys;
     // for (int i = 0; i < 5; i++) {
 
     //     Pest pest(((i+2)*64), 0*64, 20, texture); 
@@ -139,6 +141,9 @@ int main() {
     float increaseSpeedTimer = 1;
     int squirrelKillCount =0;
 
+    int strawberryCount =0;
+    bool win=false;
+
     text.setString("SCRORE : " +std::to_string(squirrelKillCount));
     // set the character size
     text.setCharacterSize(16); // in pixels, not points!
@@ -150,98 +155,139 @@ int main() {
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
     while (window.isOpen()) {
-        sf::Time dt = clock.restart();
-        
-        // handle events
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
+        if(!win){
+            sf::Time dt = clock.restart();
+            
+            // handle events
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                }
+                farmer.handleEvent(event, plants, pests);
             }
-            farmer.handleEvent(event, plants, pests);
-        }
-        farmer.update(dt,window);
-    
-    
-
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(2, 5);
-        //randomly generate squirrels
-        int random_number = dis(gen);
-
-        if (pestSpawnTimer.getElapsedTime().asSeconds() > pestSpawnInterval && pests.size() < 10) {
-            pests.emplace_back(random_number*64, 0, 10, texture); // Add a new pest to the vector //put random number between 2 and 5 *64 here
-            pestSpawnTimer.restart(); // Restart the timer
-        }
+            farmer.update(dt,window);
+        
         
 
-/**** TR CHANGES = int i+1 & i++****/
-    //   for (auto& pest : pests) {
-        for(int i=0;i<pests.size();i++){
-        std::cout<<"Priting pests"<<std::endl;
-        //for (size_t i = 0; i < pests.size(); i++) {
-        //Pest& pest = pests[i]; // get a reference to the i-th element in the vector
-       // pest.updatePosition(); // call a member function to update the position
-            std::cout<<"hp of pests== " <<pests[i].getHP()<<std::endl;
-            if (pests[i].getHP()<1){
-                pests.erase(pests.begin()+i);
-                squirrelKillCount++;
-                text.setString("SCRORE : " +std::to_string(squirrelKillCount));
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(2, 5);
+            //randomly generate squirrels
+            int random_number = dis(gen);
+
+            if (pestSpawnTimer.getElapsedTime().asSeconds() > pestSpawnInterval && pests.size() < 10) {
+                pests.emplace_back(random_number*64, 0, 10, texture); // Add a new pest to the vector //put random number between 2 and 5 *64 here
+                pestSpawnTimer.restart(); // Restart the timer
             }
-        }
+            
 
-/**** TR CHANGES****/
-
-/**** TR CHANGES i stops at 5 instead of 10 ****/
-        for(int i=0; i<plants.size(); i++){
-            plants[i].update(dt);
-        // std::cout<<"Priting pests12"<<std::endl;
-        }
-        
-        increaseSpeedTimer++;
-        for(int i=0; i<pests.size(); i++){
-            bool status = pests[i].update(dt, plants, increaseSpeedTimer);
-            if(status){
-                pests.erase(pests.begin()+i);
+    /**** TR CHANGES = int i+1 & i++****/
+        //   for (auto& pest : pests) {
+            for(int i=0;i<pests.size();i++){
+            std::cout<<"Priting pests"<<std::endl;
+            //for (size_t i = 0; i < pests.size(); i++) {
+            //Pest& pest = pests[i]; // get a reference to the i-th element in the vector
+        // pest.updatePosition(); // call a member function to update the position
+                std::cout<<"hp of pests== " <<pests[i].getHP()<<std::endl;
+                if (pests[i].getHP()<1){
+                    pests.erase(pests.begin()+i);
+                    squirrelKillCount++;
+                    text.setString("SCRORE : " +std::to_string(squirrelKillCount));
+                }
             }
-            std::cout<<"Priting 1231"<<std::endl;
-        }
 
-        for(int i=0;i<plants.size();i++){
-        std::cout<<"Priting plants"<<std::endl;
-        //for (size_t i = 0; i < pests.size(); i++) {
-        //Pest& pest = pests[i]; // get a reference to the i-th element in the vector
-       // pest.updatePosition(); // call a member function to update the position
-            std::cout<<"hp of plants== " <<plants[i].getHP()<<std::endl;
-            if (plants[i].getHP()<1){
-                plants.erase(plants.begin()+i);
+    /**** TR CHANGES****/
+
+    /**** TR CHANGES i stops at 5 instead of 10 ****/
+            for(int i=0; i<plants.size(); i++){
+                bool strawStatus = plants[i].update(dt);
+            // std::cout<<"Priting pests12"<<std::endl;
+            //how do i get it to only grow once and not every second??
+                if(strawStatus&& plants[i].getIsGrowing()==false){
+                    float x = (i+2)*64;
+                    float y = 7*64;
+                    strawberrys.emplace_back(x, y, texture);
+                    strawberryCount++;
+                }
             }
+
+
+            for(int i=0; i<strawberrys.size();i++){
+                if(farmer.getGB().intersects(strawberrys[i].getGB())){
+                    strawberrys.erase(strawberrys.begin()+i);
+                    strawberryCount--;
+                    if(strawberryCount==0){
+                        win=true;
+                    }
+                }
+            }
+            
+            increaseSpeedTimer++;
+            for(int i=0; i<pests.size(); i++){
+                bool status = pests[i].update(dt, plants, increaseSpeedTimer);
+                if(status){
+                    pests.erase(pests.begin()+i);
+                }
+                std::cout<<"Priting 1231"<<std::endl;
+            }
+
+            for(int i=0;i<plants.size();i++){
+            std::cout<<"Priting plants"<<std::endl;
+            //for (size_t i = 0; i < pests.size(); i++) {
+            //Pest& pest = pests[i]; // get a reference to the i-th element in the vector
+        // pest.updatePosition(); // call a member function to update the position
+                std::cout<<"hp of plants== " <<plants[i].getHP()<<std::endl;
+                if (plants[i].getHP()<1){
+                    plants.erase(plants.begin()+i);
+                }
+            }
+    /**** TR CHANGES i stops at 5 instead of 10 ****/
+
+            // pest.update(dt,plants);
+            // plant.update(dt);
+
+            // draw objects
+            window.clear();
+            map.draw(window);
+            farmer.draw(window);
+        // pest.draw(window);
+
+    /**** TR CHANGES i stops at 5 instead of 10 ****/
+
+            for(int i=0; i<plants.size(); i++){
+                // std::cout<<"Priting pplantqwew"<<std::endl;
+                plants[i].draw(window);
+            }
+            for(int i=0; i<pests.size(); i++){
+                pests[i].draw(window);
+            }
+            for(int i=0; i<strawberrys.size(); i++){
+                // std::cout<<"Priting pplantqwew"<<std::endl;
+                strawberrys[i].draw(window);
+            }
+            //plant.draw(window);
+            window.draw(text);
+            
+            window.display();
         }
-/**** TR CHANGES i stops at 5 instead of 10 ****/
-
-        // pest.update(dt,plants);
-        // plant.update(dt);
-
-        // draw objects
-        window.clear();
-        map.draw(window);
-        farmer.draw(window);
-       // pest.draw(window);
-
-/**** TR CHANGES i stops at 5 instead of 10 ****/
-
-        for(int i=0; i<plants.size(); i++){
-            // std::cout<<"Priting pplantqwew"<<std::endl;
-            plants[i].draw(window);
+        else{
+            window.clear();
+            sf::Texture finalTexture;
+            //display title
+            if (!finalTexture.loadFromFile("graphics/win.jpg")) {
+                // handle error loading image
+            }
+            
+            sf::Sprite final(finalTexture);
+            final.setPosition(0.f, 0.f);
+            final.setScale(sf::Vector2f(0.4565f, 0.4565f));//has to be this number
+            // draw title screen
+            window.clear();
+            window.draw(final);
+            window.display();
         }
-        for(int i=0; i<pests.size(); i++){
-            pests[i].draw(window);
-        }
-        //plant.draw(window);
-        window.draw(text);
-        
-        window.display();
+
         
     }
 

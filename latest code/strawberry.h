@@ -7,12 +7,12 @@
 class Strawberry{
 
     public:
-        Strawberry(float x, float y) ;
+        Strawberry(float x, float y, sf::Texture& texture) ;
         //void draw();
         void draw(sf::RenderWindow& window);
+        const sf::FloatRect getGB();
 
     private:
-        sf::Texture texture;
         sf::Sprite sprite;
 
 };

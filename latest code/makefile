@@ -82,7 +82,7 @@ CXXFLAGS = -std=c++11 -Wall
 PATH1 = -I /home/linuxbrew/.linuxbrew/Cellar/sfml/2.5.1_2 
 SFML_LIBS = -L/opt/homebrew/Cellar/sfml/2.5.1_2/lib/ -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
-SRCS = main.cpp map.cpp farmer.cpp plant.cpp pest.cpp
+SRCS = main.cpp map.cpp farmer.cpp plant.cpp pest.cpp strawberry.cpp
 OBJS = $(SRCS:.cpp=.o)
 EXEC = mygame
 

@@ -139,7 +139,9 @@ void Farmer::handleEvent(sf::Event event, std::vector<Plant>& plants, std::vecto
         }
     }
 }
-
+const sf::FloatRect Farmer::getGB(){
+    return sprite.getGlobalBounds();
+}
 
 void Farmer::waterSpell(Plant& plant) {
     // Check if the farmer's sprite is intersecting with the plant's sprite

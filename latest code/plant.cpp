@@ -48,10 +48,9 @@ void Plant::draw(sf::RenderWindow& window) {
     window.draw(sprite);
 }
 
-void Plant::update(sf::Time dt) {
+bool Plant::update(sf::Time dt) {
     // Update healthBar
     float hpRatio = (float)hP / maxHP;
-
 
     healthBar.setSize(sf::Vector2f(sprite.getGlobalBounds().width * hpRatio, 5));
     healthBar.setPosition(sprite.getPosition().x, sprite.getPosition().y - 20.f);
@@ -61,20 +60,26 @@ void Plant::update(sf::Time dt) {
         number=number +1;//time
        std::cout<<number<<std::endl;
 
-        if(number >= 500 && amountOfWaterings > 2){//grow double size
+        if(number >= 400 && amountOfWaterings > 2){//grow double size
             sprite.setScale(sf::Vector2f(0.25f, 0.25f));
         }else{
             sprite.setTextureRect(sf::IntRect(439, 26, 137, 247));
             sprite.setScale(sf::Vector2f(0.15f, 0.15f));
         }
 
-        if (number >= 1000 && hP >= 15) {//after 100 seconds the plant will sprout
+        if (number >= 800 && hP >= 15 && isGrowing) {//after 100 seconds the plant will sprout
             growTimer = sf::Time::Zero;
             // Create a new sprite here
             std::cout << "Plant has grown!" << std::endl;
-            //isGrowing = false;
+            isGrowing = false;
+            return true;
         }
     }
+    return false;
+}
+
+bool Plant::getIsGrowing(){
+    return isGrowing;
 }
 
 void Plant::startGrowing() {
